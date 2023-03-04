@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express();
 const { create, index, find, update, destroy } = require('./controller');
+const { authenticateUser, authorizeRoles } = require('../../../middlewares/auth');
 
-router.get('/categories', index);
+router.get('/categories', authenticateUser, index);
 
 router.get('/categories/:id', find);
 
