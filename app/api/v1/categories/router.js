@@ -5,12 +5,12 @@ const { authenticateUser, authorizeRoles } = require('../../../middlewares/auth'
 
 router.get('/categories', authenticateUser, index);
 
-router.get('/categories/:id', find);
+router.get('/categories/:id', authenticateUser, find);
 
-router.put('/categories/:id', update);
+router.put('/categories/:id', authenticateUser, update);
 
-router.delete('/categories/:id', destroy);
+router.delete('/categories/:id', authenticateUser, destroy);
 
-router.post('/categories', create);
+router.post('/categories', authenticateUser, create);
 
 module.exports = router;
