@@ -3,7 +3,11 @@ const Events = require('../../api/v1/events/model');
 const Orders = require('../../api/v1/orders/model');
 const Payments = require('../../api/v1/payments/model');
 
-const { BadRequestError, NotFoundError, UnauthorizedError } = require('../../errors');
+const {
+  BadRequestError,
+  NotFoundError,
+  UnauthorizedError,
+} = require('../../errors');
 const { createTokenParticipant, createJWT } = require('../../utils');
 
 const { otpMail } = require('../mail');
@@ -95,14 +99,20 @@ const signinParticipant = async (req) => {
 };
 
 const getAllEvents = async (req) => {
-  const result = await Events.find({ statusEvent: 'Published' }).populate('category').populate('image').select('_id title date tickets venueName');
+  const result = await Events.find({ statusEvent: 'Published' })
+    .populate('category')
+    .populate('image')
+    .select('_id title date tickets venueName');
 
   return result;
 };
 
 const getOneEvent = async (req) => {
   const { id } = req.params;
-  const result = await Events.findOne({ _id: id }).populate('category').populate({ path: 'talent', populate: 'image' }).populate('image');
+  const result = await Events.findOne({ _id: id })
+    .populate('category')
+    .populate({ path: 'talent', populate: 'image' })
+    .populate('image');
 
   if (!result) throw new NotFoundError(`Tidak ada acara dengan id :  ${id}`);
 
@@ -110,7 +120,6 @@ const getOneEvent = async (req) => {
 };
 
 const getAllOrders = async (req) => {
-  console.log(req.participant);
   const result = await Orders.find({ participant: req.participant.id });
   return result;
 };
@@ -130,7 +139,9 @@ const checkoutOrder = async (req) => {
   const checkingPayment = await Payments.findOne({ _id: payment });
 
   if (!checkingPayment) {
-    throw new NotFoundError('Tidak ada metode pembayaran dengan id :' + payment);
+    throw new NotFoundError(
+      'Tidak ada metode pembayaran dengan id :' + payment
+    );
   }
 
   let totalPay = 0,

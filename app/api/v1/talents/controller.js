@@ -1,4 +1,10 @@
-const { getAllTalents, getOneTalents, updateTalents, createTalents, deleteTalents } = require('../../../services/mongoose/talents');
+const {
+  getAllTalents,
+  getOneTalents,
+  updateTalents,
+  createTalents,
+  deleteTalents,
+} = require('../../../services/mongoose/talents');
 
 const { StatusCodes } = require('http-status-codes');
 
@@ -22,7 +28,6 @@ const index = async (req, res, next) => {
       data: result,
     });
   } catch (err) {
-    console.log(err);
     next(err);
   }
 };

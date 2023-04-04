@@ -14,9 +14,6 @@ const getAllTalents = async (req) => {
     condition = { ...condition, name: { $regex: keyword, $options: 'i' } };
   }
 
-  console.log('condition');
-  console.log(condition);
-
   const result = await Talents.find(condition)
     .populate({
       path: 'image',
@@ -39,7 +36,12 @@ const createTalents = async (req) => {
   // apa bila check true / data talents sudah ada maka kita tampilkan error bad request dengan message pembicara duplikat
   if (check) throw new BadRequestError('pembicara sudah terdaftar');
 
-  const result = await Talents.create({ name, image, role, organizer: req.user.organizer });
+  const result = await Talents.create({
+    name,
+    image,
+    role,
+    organizer: req.user.organizer,
+  });
 
   return result;
 };
@@ -47,14 +49,18 @@ const createTalents = async (req) => {
 const getOneTalents = async (req) => {
   const { id } = req.params;
 
-  const result = await Talents.findOne({ _id: id, organizer: req.user.organizer })
+  const result = await Talents.findOne({
+    _id: id,
+    organizer: req.user.organizer,
+  })
     .populate({
       path: 'image',
       select: '_id name',
     })
     .select('_id name role image');
 
-  if (!result) throw new NotFoundError(`Tidak ada pembicara dengan id :  ${id}`);
+  if (!result)
+    throw new NotFoundError(`Tidak ada pembicara dengan id :  ${id}`);
 
   return result;
 };
@@ -76,10 +82,15 @@ const updateTalents = async (req) => {
   // apa bila check true / data talents sudah ada maka kita tampilkan error bad request dengan message pembicara nama duplikat
   if (check) throw new BadRequestError('pembicara sudah terdaftar');
 
-  const result = await Talents.findOneAndUpdate({ _id: id }, { name, image, role, organizer: req.user.organizer }, { new: true, runValidators: true });
+  const result = await Talents.findOneAndUpdate(
+    { _id: id },
+    { name, image, role, organizer: req.user.organizer },
+    { new: true, runValidators: true }
+  );
 
   // jika id result false / null maka akan menampilkan error `Tidak ada pembicara dengan id` yang dikirim client
-  if (!result) throw new NotFoundError(`Tidak ada pembicara dengan id :  ${id}`);
+  if (!result)
+    throw new NotFoundError(`Tidak ada pembicara dengan id :  ${id}`);
 
   return result;
 };
@@ -92,7 +103,8 @@ const deleteTalents = async (req) => {
     organizer: req.user.organizer,
   });
 
-  if (!result) throw new NotFoundError(`Tidak ada pembicara dengan id :  ${id}`);
+  if (!result)
+    throw new NotFoundError(`Tidak ada pembicara dengan id :  ${id}`);
 
   await result.remove();
 
@@ -102,7 +114,8 @@ const deleteTalents = async (req) => {
 const checkingTalents = async (id) => {
   const result = await Talents.findOne({ _id: id });
 
-  if (!result) throw new NotFoundError(`Tidak ada pembicara dengan id :  ${id}`);
+  if (!result)
+    throw new NotFoundError(`Tidak ada pembicara dengan id :  ${id}`);
 
   return result;
 };
